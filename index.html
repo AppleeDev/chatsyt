@@ -1,0 +1,93 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                    <meta charset="UTF-8">
+        <title>SYT</title>
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+                font-size: 0;/* fix Safari mobile padding bug */
+            }
+        </style>
+        <link rel="shortcut icon" href="https://d1pfint8izqszg.cloudfront.net/new/favicon.ico">
+
+        <script>
+                        var script = document.createElement('script');
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=UA-20104634-4';
+            script.async = true;
+            document.head.appendChild(script);
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', 'UA-20104634-3');
+            
+            window.addEventListener(
+                'load',
+                function () {
+                    var hash = 'Y@KTkY2s';
+
+                    /* in case of mobile device, notify the chat about orientation change */
+                    window.addEventListener(
+                        'orientationchange',
+                        function () {
+                            try {
+                                var data = {
+                                    type: 'orientationchange',
+                                    width: parseInt(RumbleTalkChat[hash].iframe.style.width),
+                                    height: parseInt(RumbleTalkChat[hash].iframe.style.height)
+                                };
+
+                                window.RumbleTalkChat[hash].iframe.contentWindow.postMessage(
+                                    data,
+                                    'https://' + window.RumbleTalkChat[hash].server
+                                );
+                            } catch (ignore) {
+                            }
+                        }
+                    );
+
+                    /**
+                     * checks if the given origin is of a chat service
+                     * @param {string} origin - the URL of the origin
+                     * @returns {boolean}
+                     */
+                    function validateOrigin(origin) {
+                        return (/^https:\/\/.+\.rumbletalk\.net(:4433)?$/).test(origin);
+                    }
+
+                    var openerInfo;
+                    window.addEventListener(
+                        'message',
+                        function (event) {
+                            /* came from the chat */
+                            if (validateOrigin(event.origin)) {
+                                if (openerInfo) {
+                                    openerInfo.source.postMessage(
+                                        event.data,
+                                        openerInfo.origin
+                                    );
+                                }
+
+                                /* came from the opening window */
+                            } else {
+                                openerInfo = {
+                                    source: event.source,
+                                    origin: event.origin
+                                };
+                                window.RumbleTalkChat[hash].iframe.contentWindow.postMessage(
+                                    event.data,
+                                    'https://' + window.RumbleTalkChat[hash].server
+                                );
+                            }
+                        }
+                    );
+                }
+            );
+        </script>
+                </head>
+        <body><div id="rumbletalk-chat-fullscreen"><div id="rt-0a58cf0877cc1cf78ee4d6e18dce7fb7"></div><script src="https://rumbletalk.com/client/?Y@KTkY2s"></script></div></body>
+        </html>
+        
